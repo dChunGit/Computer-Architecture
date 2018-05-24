@@ -1,0 +1,35 @@
+	.orig x1200
+		ADD R6, R6, #-2
+		STW R0, R6, #0
+		ADD R6, R6, #-2
+		STW R1, R6, #0
+		ADD R6, R6, #-2
+		STW R2, R6, #0
+		ADD R6, R6, #-2
+		STW R3, R6, #0
+		LEA R0, LAST
+		LDW R0, R0, #0
+		LEA R3, MASK
+		LDW R3, R3, #0
+		LEA R1, PTSTA
+		LDW R1, R1, #0
+LOOP	ADD R0, R0, #-1
+		BRn DONE
+		LDW R2, R1, #0
+		AND R2, R2, R3
+		STW R2, R1, #0
+		ADD R1, R1, #2
+		BR LOOP
+DONE	LDW R3, R6, #0
+		ADD R6, R6, #2
+		LDW R2, R6, #0
+		ADD R6, R6, #2
+		LDW R1, R6, #0
+		ADD R6, R6, #2
+		LDW R0, R6, #0
+		ADD R6, R6, #2
+		RTI
+PTSTA	.FILL x1000
+LAST	.FILL #127
+MASK	.FILL xFFFE
+	.end

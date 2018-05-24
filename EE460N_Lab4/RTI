@@ -1,0 +1,31 @@
+State A = 8
+MAR <- R6
+
+State B = 37
+MDR <- M[MAR]
+
+State C = 39
+PC <- MDR
+
+State D = 53
+R6 + 2
+MAR <- R6
+
+State E = 60
+MDR <- M[MAR]
+
+State F = 62
+R6 + 2
+
+State G = 61
+PSR <- MDR
+
+State I = 41
+SSP <- R6
+
+State J = 55
+PSR[15] if 0 -> 18
+		if 1 -> 26
+
+State K = 26
+R6 <- USP

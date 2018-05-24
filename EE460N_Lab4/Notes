@@ -1,0 +1,80 @@
+Add PSR, SSP, USP to arch (also temp register)
+When cycle is 300 (check for it), do interrupt
+Don't check PSR in interrupt handler
+PSR initial value = 0x1 000000000000 010 (NZP)
+States 10/11 -> check in evalmicrosequencer
+
+Interrupt signal high until cleared in control
+
+State A = 49
+MDR <- PSR
+PC <- PC - 2
+PSR[15]
+
+State B1 = 44 = PSR[15] = 1
+USP <- R6
+;;;State B2 = 36 = PSR[15] = 0 ?? will user have to save ssp (r6)?
+;;;SSP <- R6
+ 	
+State C = 45
+PSR[15] = 0
+R6 <- SSP
+
+State D = 36 (can you load 2 things at once)
+R6 - 2
+MAR <- R6
+
+State E = 48
+M[MAR] <- MDR
+
+State F = 50
+R6 - 2
+MAR <- R6
+
+State G = 51
+MDR <- PC //if exception, PC - 2
+
+State H = 52
+M[MAR] <- MDR
+
+State I = 54
+MAR <- (INTV << 1) + x0200
+
+State J = 56
+MDR <- M[MAR]
+
+State K = 58
+PC <- MDR
+
+
+-----------------------------
+Protection Exception
+Check if address between x0000 and x2FFF
+	Check if user mode
+
+Unaligned Access
+	Check if word and address even
+
+Unknown opcode
+	If state 10 or 11
+
+-------------------------------
+TODO
+Muxes: done
+Interrupt/Exception LOGIC: done
+PC MUX2: done
+SSP: done
+USP: done
+PSR: done
+addmux: done
+Microsequencer: done
+
+r 299
+md 0x4000 0x4000
+rd
+r 216
+md 0x4000 0x4000
+rd
+g
+md 0x4000 0x4000
+rd

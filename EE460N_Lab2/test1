@@ -1,0 +1,9 @@
+.orig x3000
+and r1, r1, #0
+add r1, r1, #2
+jsr end
+add r1, r1, #1
+add r1, r1, #1
+end trap x25
+label .fill x300a
+.end

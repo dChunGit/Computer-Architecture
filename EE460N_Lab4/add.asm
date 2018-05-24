@@ -1,0 +1,27 @@
+	.orig x3000
+		LEA R0, LOC
+		LDW R0, R0, #0
+		ADD R1, R1, #1
+		STW R1, R0, #0
+		LEA R0, DAT
+		LDW R0, R0, #0
+		AND R1, R1, #0
+		ADD R2, R2, #10
+		ADD R2, R2, #10
+LOOP	BRnz STORE
+		LDB R3, R0, #0
+		ADD R1, R1, R3
+		ADD R0, R0, #1
+		ADD R2, R2, #-1
+		BRnzp LOOP
+		ADD R2, R2, #10
+STORE	LEA R0, STO
+		LDW R0, R0, #0
+		STW R1, R0, #0
+		AND R0, R0, #0
+		STW R1, R0, #0
+		TRAP x25
+LOC		.FILL x4000
+DAT		.FILL xC000
+STO		.FILL xC014
+	.end

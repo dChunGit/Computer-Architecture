@@ -1,0 +1,162 @@
+Add PSR, SSP, USP to arch (also temp register)
+When cycle is 300 (check for it), do interrupt
+Don't check PSR in interrupt handler
+PSR initial value = 0x1 000000000000 010 (NZP)
+States 10/11 -> check in evalmicrosequencer
+
+Interrupt signal high until cleared in control
+
+State A = 49
+TEMP <- PSR
+PC <- PC - 2
+PSR[15]
+
+State B1 = 44 = PSR[15] = 1
+USP <- R6
+;;;State B2 = 36 = PSR[15] = 0 ?? will user have to save ssp (r6)?
+;;;SSP <- R6
+ 	
+State C = 45
+PSR[15] = 0
+R6 <- SSP
+
+State D = 36 (can you load 2 things at once)
+R6 - 2
+MAR <- R6 - 2
+
+State D2 = 38
+MDR <- TEMP
+
+State E = 48
+M[MAR] <- MDR
+
+State F = 50
+R6 - 2
+MAR <- R6
+
+State G = 51
+MDR <- PC //if exception, PC - 2
+
+State H = 52
+M[MAR] <- MDR
+
+State I = 54
+MAR <- (INTV << 1) + x0200
+
+State J = 56
+MDR <- M[MAR]
+
+State K = 58
+PC <- MDR
+
+
+-----------------------------
+Protection Exception
+Check if address between x0000 and x2FFF
+	Check if user mode
+
+Unaligned Access
+	Check if word and address even
+
+Unknown opcode
+	If state 10 or 11
+
+-------------------------------
+TODO
+Muxes: done
+Interrupt/Exception LOGIC: done
+PC MUX2: done
+SSP: done
+USP: done
+PSR: done
+addmux: done
+Microsequencer: done
+
+r 299
+md 0x4000 0x4000
+rd
+r 216
+md 0x4000 0x4000
+rd
+g
+md 0x4000 0x4000
+rd
+
+r 299
+md 0x1000 0x10FE
+r 30121
+md 0x1000 0x10FE
+g
+md 0x1000 0x10FE
+rd
+md 0x3814 0x3814
+
+
+
+-------------------------------
+Virtual Memory 17 cycles
+
+State A = 10
+VAR <- MAR
+
+State B = 11
+MAR <- PTBR + 2x(VAR[15:9]
+
+State C = 34 -> 40
+MDR <- M[MAR]
+
+State D = 38 -> 42
+PTER <- MDR
+
+State E = 34
+[PTE[3]] (Protection Exception)
+[PTE[2]]
+
+State G = 43
+PTE[0] <- 1
+PTE[1] <- R_W
+
+State H = 46
+MDR <- PTER
+
+State I = 47 -> 57
+M[MAR] <- MDR
+
+State J = 57 -> 59
+MAR <- PFN, VAR[8:0]
+
+0000 0000 0000 0100 -> 0004
+0000 0010 0000 0100 -> 0204
+0000 0100 0000 0100 -> 0404
+0000 0110 0000 0100 -> 0604
+0000 1000 0000 0100 -> 0804
+0000 1010 0000 0100 -> 0A04
+0000 1100 0000 0100 -> 0C04
+0000 1110 0000 0100 -> 0E04
+0001 0000 0000 0100 -> 1004
+0001 0010 0000 0100 -> 1204
+0001 0100 0000 0100 -> 1404
+-> 1604
+-> 1804
+-> 1A04
+-> 1C04
+0001 1110 0000 0100 -> 1E04
+0010 0000 0000 0100 -> 2004
+-> 2204
+-> 2404
+-> 2604
+-> 2804
+-> 2A04
+-> 2C04
+-> 2E04
+
+0000 0000 0000 1000 -> 0008
+0011 0010 0000 0100 -> 3204
+0011 1000 0000 0100 -> 3804
+0011 1010 0000 0100 -> 3A04
+
+
+
+
+
+

@@ -1,0 +1,18 @@
+Tested:
+add: register and intermediate
+and: register and intermediate
+brz
+jmp
+jsr/jsrr
+ret
+ldb
+ldw
+lea
+lshf
+ret
+rshfl
+rshfa
+stw
+stb
+not
+halt

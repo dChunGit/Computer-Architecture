@@ -1,0 +1,1 @@
+./lc3bsim4 ucode4 int.asm vector_table.asm except_prot.asm except_unaligned.asm except_unknown.asm add.asm data.asm
